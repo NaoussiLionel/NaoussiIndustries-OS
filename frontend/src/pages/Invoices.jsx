@@ -124,13 +124,13 @@ export default function Invoices() {
             <td>${inv.project_desc || inv.package || inv.type + ' Payment'}</td>
             <td>${inv.project_code || '-'}</td>
             <td>${inv.type === 'Deposit' ? '50% Deposit' : inv.type === 'Balance' ? '50% Balance' : 'Full Payment'}</td>
-            <td style="text-align:right">{Number(inv.amount).toLocaleString()} FCFA</td>
+            <td style="text-align:right">${Number(inv.amount).toLocaleString()} FCFA</td>
           </tr>
           ${inv.deposit_paid > 0 ? `<tr><td></td><td></td><td>Deposit Received</td><td style="text-align:right">-${Number(inv.deposit_paid).toLocaleString()} FCFA</td></tr>` : ''}
         </tbody>
       </table>
       <hr>
-      <div class="total">Total Due: {balance.toLocaleString()} FCFA</div>
+      <div class="total">Total Due: ${balance.toLocaleString()} FCFA</div>
       <div class="footer">
         Naoussi Industries &middot; Payment Terms: 50% deposit before work, 50% balance before delivery &middot; Thank you for your business!
       </div>
