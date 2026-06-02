@@ -124,13 +124,13 @@ export default function Invoices() {
             <td>${inv.project_desc || inv.package || inv.type + ' Payment'}</td>
             <td>${inv.project_code || '-'}</td>
             <td>${inv.type === 'Deposit' ? '50% Deposit' : inv.type === 'Balance' ? '50% Balance' : 'Full Payment'}</td>
-            <td style="text-align:right">$${Number(inv.amount).toLocaleString()}</td>
+            <td style="text-align:right">{Number(inv.amount).toLocaleString()} FCFA</td>
           </tr>
-          ${inv.deposit_paid > 0 ? `<tr><td></td><td></td><td>Deposit Received</td><td style="text-align:right">-$${Number(inv.deposit_paid).toLocaleString()}</td></tr>` : ''}
+          ${inv.deposit_paid > 0 ? `<tr><td></td><td></td><td>Deposit Received</td><td style="text-align:right">-${Number(inv.deposit_paid).toLocaleString()} FCFA</td></tr>` : ''}
         </tbody>
       </table>
       <hr>
-      <div class="total">Total Due: $${balance.toLocaleString()}</div>
+      <div class="total">Total Due: {balance.toLocaleString()} FCFA</div>
       <div class="footer">
         Naoussi Industries &middot; Payment Terms: 50% deposit before work, 50% balance before delivery &middot; Thank you for your business!
       </div>
@@ -158,12 +158,12 @@ export default function Invoices() {
         </div>
         <div className="stat-card">
           <div className="stat-label">Outstanding</div>
-          <div className="stat-value" style={{ color: 'var(--orange)' }}>${totalOutstanding.toLocaleString()}</div>
+          <div className="stat-value" style={{ color: 'var(--orange)' }}>{totalOutstanding.toLocaleString()} FCFA</div>
           <div className="stat-sub">{invoices.filter(i => i.status === 'Sent' || i.status === 'Overdue').length} unpaid</div>
         </div>
         <div className="stat-card">
           <div className="stat-label">Collected</div>
-          <div className="stat-value" style={{ color: 'var(--green)' }}>${totalPaid.toLocaleString()}</div>
+          <div className="stat-value" style={{ color: 'var(--green)' }}>{totalPaid.toLocaleString()} FCFA</div>
           <div className="stat-sub">{invoices.filter(i => i.status === 'Paid').length} paid</div>
         </div>
         <div className="stat-card">
@@ -203,9 +203,9 @@ export default function Invoices() {
                     <td>{inv.company_name || <span className="text-muted">—</span>}</td>
                     <td>{inv.project_code || <span className="text-muted">—</span>}</td>
                     <td><StatusBadge status={inv.type} /></td>
-                    <td><span style={{ fontWeight: 600 }}>${Number(inv.amount).toLocaleString()}</span></td>
+                    <td><span style={{ fontWeight: 600 }}>{Number(inv.amount).toLocaleString()} FCFA</span></td>
                     <td style={{ fontWeight: 600, color: balance > 0 ? 'var(--orange)' : 'var(--green)' }}>
-                      ${balance.toLocaleString()}
+                      {balance.toLocaleString()} FCFA
                     </td>
                     <td style={{ fontSize: 12 }}>{inv.issued_date ? new Date(inv.issued_date).toLocaleDateString() : '—'}</td>
                     <td style={{ fontSize: 12 }}>{inv.due_date ? new Date(inv.due_date).toLocaleDateString() : '—'}</td>
@@ -249,9 +249,9 @@ export default function Invoices() {
             <div className="detail-panel">
               <div className="detail-panel-header">Financial</div>
               <div className="detail-panel-body">
-                <div className="detail-row"><span className="label">Amount</span><span className="value" style={{ fontWeight: 700 }}>${Number(detail.amount).toLocaleString()}</span></div>
-                <div className="detail-row"><span className="label">Deposit Paid</span><span className="value" style={{ color: 'var(--green)' }}>${Number(detail.deposit_paid).toLocaleString()}</span></div>
-                <div className="detail-row"><span className="label">Balance Due</span><span className="value" style={{ color: 'var(--orange)', fontWeight: 700 }}>${(Number(detail.amount) - Number(detail.deposit_paid)).toLocaleString()}</span></div>
+                <div className="detail-row"><span className="label">Amount</span><span className="value" style={{ fontWeight: 700 }}>{Number(detail.amount).toLocaleString()} FCFA</span></div>
+                <div className="detail-row"><span className="label">Deposit Paid</span><span className="value" style={{ color: 'var(--green)' }}>{Number(detail.deposit_paid).toLocaleString()} FCFA</span></div>
+                <div className="detail-row"><span className="label">Balance Due</span><span className="value" style={{ color: 'var(--orange)', fontWeight: 700 }}>{(Number(detail.amount) - Number(detail.deposit_paid)).toLocaleString()} FCFA</span></div>
               </div>
             </div>
           </div>
@@ -312,8 +312,8 @@ export default function Invoices() {
             </FormGroup>
           </div>
           <div className="form-row">
-            <FormGroup label="Amount ($)"><input type="number" name="amount" value={form.amount} onChange={handleChange} /></FormGroup>
-            <FormGroup label="Deposit Already Paid ($)"><input type="number" name="deposit_paid" value={form.deposit_paid} onChange={handleChange} placeholder="0" /></FormGroup>
+            <FormGroup label="Amount (FCFA)"><input type="number" name="amount" value={form.amount} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Deposit Already Paid (FCFA)"><input type="number" name="deposit_paid" value={form.deposit_paid} onChange={handleChange} placeholder="0" /></FormGroup>
           </div>
           <div className="form-row">
             <FormGroup label="Status">

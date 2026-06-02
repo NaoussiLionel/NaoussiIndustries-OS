@@ -232,7 +232,7 @@ const db = {
     const pipelineValue = data.leads
       .filter(l => l.status !== 'Closed Won' && l.status !== 'Closed Lost' && l.budget_range)
       .reduce((s, l) => {
-        const num = parseInt(l.budget_range.replace(/[$,]/g, ''))
+        const num = parseInt(l.budget_range.replace(/[,\s]/g, ''))
         return s + (isNaN(num) ? 0 : num)
       }, 0)
 

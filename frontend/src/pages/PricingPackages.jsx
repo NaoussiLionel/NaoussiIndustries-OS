@@ -40,8 +40,8 @@ export default function PricingPackages() {
             {packages.map(p => (
               <tr key={p.id}>
                 <td><strong>{p.name}</strong></td>
-                <td>${p.client_price_min}–${p.client_price_max}</td>
-                <td>${p.freelancer_cost_min}–${p.freelancer_cost_max}</td>
+                <td>{p.client_price_min}–{p.client_price_max} FCFA</td>
+                <td>{p.freelancer_cost_min}–{p.freelancer_cost_max} FCFA</td>
                 <td><span className={`status-badge ${p.target_margin_pct >= 70 ? 'status-active' : p.target_margin_pct >= 65 ? 'status-on_hold' : 'status-pending'}`}>{p.target_margin_pct}%</span></td>
                 <td>{p.description || '-'}</td>
                 <td><button className="btn btn-sm btn-ghost" onClick={() => openEdit(p)}>Edit</button></td>
@@ -69,12 +69,12 @@ export default function PricingPackages() {
         <Modal title="Edit Package" onClose={() => setModal(null)}>
           <FormGroup label="Name"><input name="name" value={form.name} onChange={handleChange} /></FormGroup>
           <div className="form-row">
-            <FormGroup label="Client Price Min ($)"><input type="number" name="client_price_min" value={form.client_price_min} onChange={handleChange} /></FormGroup>
-            <FormGroup label="Client Price Max ($)"><input type="number" name="client_price_max" value={form.client_price_max} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Client Price Min (FCFA)"><input type="number" name="client_price_min" value={form.client_price_min} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Client Price Max (FCFA)"><input type="number" name="client_price_max" value={form.client_price_max} onChange={handleChange} /></FormGroup>
           </div>
           <div className="form-row">
-            <FormGroup label="Freelancer Cost Min ($)"><input type="number" name="freelancer_cost_min" value={form.freelancer_cost_min} onChange={handleChange} /></FormGroup>
-            <FormGroup label="Freelancer Cost Max ($)"><input type="number" name="freelancer_cost_max" value={form.freelancer_cost_max} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Freelancer Cost Min (FCFA)"><input type="number" name="freelancer_cost_min" value={form.freelancer_cost_min} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Freelancer Cost Max (FCFA)"><input type="number" name="freelancer_cost_max" value={form.freelancer_cost_max} onChange={handleChange} /></FormGroup>
           </div>
           <FormGroup label="Target Margin (%)"><input type="number" name="target_margin_pct" value={form.target_margin_pct} onChange={handleChange} /></FormGroup>
           <FormGroup label="Description"><textarea name="description" value={form.description} onChange={handleChange} rows={3} /></FormGroup>

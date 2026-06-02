@@ -18,7 +18,7 @@ export default function Reports() {
   const kpiData = [
     { metric: 'Conversion Rate', value: `${kpi.conversionRate}%` },
     { metric: 'Leads This Month', value: kpi.leadsThisMonth },
-    { metric: 'Pipeline Value', value: `$${kpi.pipelineValue.toLocaleString()}` },
+    { metric: 'Pipeline Value', value: `${kpi.pipelineValue.toLocaleString()} FCFA` },
     { metric: 'Avg Delivery (Days)', value: kpi.avgDeliveryDays },
     { metric: 'Avg Revisions', value: kpi.avgRevisions },
     { metric: 'On-Time Rate', value: `${kpi.onTimeRate}%` },

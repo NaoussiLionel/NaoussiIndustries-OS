@@ -43,9 +43,9 @@ export default function Financial() {
       </div>
 
       <div className="grid-4">
-        <div className="stat-card"><div className="label">Revenue</div><div className="value green">${(summary.totals.revenue + summary.totals.deposits + summary.totals.balances).toLocaleString()}</div></div>
-        <div className="stat-card"><div className="label">Costs</div><div className="value red">${summary.totals.costs.toLocaleString()}</div></div>
-        <div className="stat-card"><div className="label">Net Profit</div><div className="value blue">${((summary.totals.revenue + summary.totals.deposits + summary.totals.balances) - summary.totals.costs).toLocaleString()}</div></div>
+        <div className="stat-card"><div className="label">Revenue</div><div className="value green">{(summary.totals.revenue + summary.totals.deposits + summary.totals.balances).toLocaleString()} FCFA</div></div>
+        <div className="stat-card"><div className="label">Costs</div><div className="value red">{summary.totals.costs.toLocaleString()} FCFA</div></div>
+        <div className="stat-card"><div className="label">Net Profit</div><div className="value blue">{((summary.totals.revenue + summary.totals.deposits + summary.totals.balances) - summary.totals.costs).toLocaleString()} FCFA</div></div>
         <div className="stat-card"><div className="label">Overall Margin</div><div className="value" style={{ color: summary.totals.marginPct >= 60 ? 'var(--green)' : summary.totals.marginPct >= 40 ? 'var(--orange)' : 'var(--red)' }}>{summary.totals.marginPct}%</div></div>
       </div>
 
@@ -89,10 +89,10 @@ export default function Financial() {
               <tr key={t.id}>
                 <td>{new Date(t.transaction_date).toLocaleDateString()}</td>
                 <td><span className={`status-badge ${t.type.includes('Client') || t.type === 'Deposit' || t.type === 'Balance' ? 'status-active' : 'status-on_hold'}`}>{t.type}</span></td>
-                <td style={{ fontWeight: 600, color: t.type === 'Freelancer Payment' ? 'var(--red)' : 'var(--green)' }}>${t.amount}</td>
-                <td>{t.project_code || '-'}</td>
-                <td>{t.client_name || '-'}</td>
-                <td>{t.description || '-'}</td>
+                <td style={{ fontWeight: 600, color: t.type === 'Freelancer Payment' ? 'var(--red)' : 'var(--green)' }}>{t.amount} FCFA</td>
+                <td>{t.project_code || <span className="text-muted">—</span>}</td>
+                <td>{t.client_name || <span className="text-muted">—</span>}</td>
+                <td>{t.description || <span className="text-muted">—</span>}</td>
               </tr>
             ))}
             {txns.length === 0 && <tr><td colSpan={6} style={{ textAlign: 'center', padding: 40, color: 'var(--text2)' }}>No transactions yet</td></tr>}
@@ -108,7 +108,7 @@ export default function Financial() {
                 <option>Client Payment</option><option>Deposit</option><option>Balance</option><option>Freelancer Payment</option><option>Other</option>
               </select>
             </FormGroup>
-            <FormGroup label="Amount ($)"><input type="number" name="amount" value={form.amount} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Amount (FCFA)"><input type="number" name="amount" value={form.amount} onChange={handleChange} /></FormGroup>
           </div>
           <FormGroup label="Description"><input name="description" value={form.description} onChange={handleChange} /></FormGroup>
           <div className="modal-actions">

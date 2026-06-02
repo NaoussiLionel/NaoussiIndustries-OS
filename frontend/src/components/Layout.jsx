@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom'
+import ChatBot from './ChatBot'
 
 const sections = [
   {
@@ -59,6 +60,7 @@ export default function Layout({ children }) {
             </div>
           ))}
         </div>
+        <ChatBot />
         <div className="sidebar-footer">
           Naoussi Industries OS
         </div>

@@ -63,7 +63,7 @@ export default function Freelancers() {
 
       <div className="flex items-center justify-between mb-4">
         <div style={{ fontSize: 13, color: 'var(--text3)' }}>
-          {freelancers.length > 0 ? `Avg rate: $${(freelancers.reduce((s, f) => s + Number(f.rate_per_task), 0) / Math.max(freelancers.length, 1)).toFixed(0)}/task` : ''}
+          {freelancers.length > 0 ? `Avg rate: ${(freelancers.reduce((s, f) => s + Number(f.rate_per_task), 0) / Math.max(freelancers.length, 1)).toFixed(0)} FCFA/task` : ''}
         </div>
         <button className="btn btn-primary" onClick={openCreate}>+ New Freelancer</button>
       </div>
@@ -81,7 +81,7 @@ export default function Freelancers() {
                 <tr key={f.id}>
                   <td><span style={{ fontWeight: 600 }}>{f.name}</span></td>
                   <td><StatusBadge label={f.role} status={f.role} /></td>
-                  <td><span style={{ fontWeight: 600 }}>${Number(f.rate_per_task).toFixed(0)}</span></td>
+                  <td><span style={{ fontWeight: 600 }}>{Number(f.rate_per_task).toFixed(0)} FCFA</span></td>
                   <td>
                     <div className="flex items-center gap-2">
                       <div style={{ width: 50, height: 4, background: 'var(--border)', borderRadius: 4, overflow: 'hidden' }}>
@@ -121,7 +121,7 @@ export default function Freelancers() {
                 <option>Logo Designer</option><option>Graphic Designer</option><option>Motion Designer</option><option>UI Designer</option><option>Brand Designer</option>
               </select>
             </FormGroup>
-            <FormGroup label="Rate per Task ($)"><input type="number" name="rate_per_task" value={form.rate_per_task} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Rate per Task (FCFA)"><input type="number" name="rate_per_task" value={form.rate_per_task} onChange={handleChange} /></FormGroup>
           </div>
           <div className="form-row">
             <FormGroup label="Status">

@@ -5,9 +5,15 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 export default function Dashboard() {
   const [data, setData] = useState(null)
+  const [clock, setClock] = useState(new Date())
 
   useEffect(() => {
     api.dashboard.summary().then(setData).catch(console.error)
+  }, [])
+
+  useEffect(() => {
+    const t = setInterval(() => setClock(new Date()), 1000)
+    return () => clearInterval(t)
   }, [])
 
   if (!data) return <div className="card" style={{ textAlign: 'center', padding: 60, color: 'var(--text3)' }}>Loading dashboard...</div>
@@ -25,6 +31,13 @@ export default function Dashboard() {
 
   return (
     <div>
+      {/* Live Clock */}
+      <div className="live-clock">
+        <div className="clock-date">{clock.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+        <div className="clock-time">{clock.toLocaleTimeString('fr-FR')}</div>
+        <div className="clock-tz">Franc CFA (FCFA) · UTC+1</div>
+      </div>
+
       {/* KPI Ticker */}
       <div className="kpi-ticker">
         <div className="kpi-ticker-item">
@@ -125,10 +138,10 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              <tr><td>Starter Brand Kit</td><td>$80–$150</td><td><StatusBadge status="Active" label="60% margin" /></td></tr>
-              <tr><td>Business Identity Pack</td><td>$150–$300</td><td><StatusBadge status="Active" label="65% margin" /></td></tr>
-              <tr><td>Growth Brand System</td><td>$300–$700</td><td><StatusBadge status="Active" label="70% margin" /></td></tr>
-              <tr><td>Premium Strategy Pack</td><td>$700–$1500+</td><td><StatusBadge status="Active" label="75% margin" /></td></tr>
+              <tr><td>Starter Brand Kit</td><td>80–150 FCFA</td><td><StatusBadge status="Active" label="60% margin" /></td></tr>
+              <tr><td>Business Identity Pack</td><td>150–300 FCFA</td><td><StatusBadge status="Active" label="65% margin" /></td></tr>
+              <tr><td>Growth Brand System</td><td>300–700 FCFA</td><td><StatusBadge status="Active" label="70% margin" /></td></tr>
+              <tr><td>Premium Strategy Pack</td><td>700–1 500+ FCFA</td><td><StatusBadge status="Active" label="75% margin" /></td></tr>
             </tbody>
           </table>
         </div>
@@ -140,11 +153,11 @@ export default function Dashboard() {
               <tr><th>Role</th><th>Rate/Task</th></tr>
             </thead>
             <tbody>
-              <tr><td>Logo Designer</td><td>$30–$60</td></tr>
-              <tr><td>Graphic Designer</td><td>$20–$50</td></tr>
-              <tr><td>Motion Designer</td><td>$40–$100</td></tr>
-              <tr><td>UI Designer</td><td>$50–$120</td></tr>
-              <tr><td>Brand Designer</td><td>$40–$80</td></tr>
+              <tr><td>Logo Designer</td><td>30–60 FCFA</td></tr>
+              <tr><td>Graphic Designer</td><td>20–50 FCFA</td></tr>
+              <tr><td>Motion Designer</td><td>40–100 FCFA</td></tr>
+              <tr><td>UI Designer</td><td>50–120 FCFA</td></tr>
+              <tr><td>Brand Designer</td><td>40–80 FCFA</td></tr>
             </tbody>
           </table>
         </div>

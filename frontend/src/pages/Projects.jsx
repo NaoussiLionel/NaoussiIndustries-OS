@@ -4,6 +4,29 @@ import Modal, { FormGroup, StatusBadge, StageFlow, MarginBar } from '../componen
 
 const empty = { project_code: '', client_id: '', package: '', description: '', status: 'Active', client_price: 0, freelancer_cost: 0, deadline: '', freelancer_id: '' }
 
+const packageDurations = {
+  'Starter Brand Kit': 14,
+  'Business Identity Pack': 21,
+  'Growth Brand System': 30,
+  'Premium Strategy Pack': 45,
+}
+
+function calcDeadline(pkg) {
+  const days = packageDurations[pkg]
+  if (!days) return ''
+  const d = new Date()
+  d.setDate(d.getDate() + days)
+  return d.toISOString().split('T')[0]
+}
+
+function daysLeft(dateStr) {
+  if (!dateStr) return null
+  const now = new Date()
+  const d = new Date(dateStr)
+  const diff = Math.ceil((d - now) / (1000 * 60 * 60 * 24))
+  return diff
+}
+
 export default function Projects() {
   const [projects, setProjects] = useState([])
   const [modal, setModal] = useState(null)
@@ -16,8 +39,21 @@ export default function Projects() {
   function load() { api.projects.list().then(setProjects); api.clients.list().then(setClients); api.freelancers.list().then(setFreelancers) }
   useEffect(() => { load() }, [])
 
-  function openCreate() { setForm(empty); setModal('create') }
-  function handleChange(e) { setForm({ ...form, [e.target.name]: e.target.value }) }
+  function nextCode() {
+    const codes = projects.map(p => {
+      const m = p.project_code?.match(/NI-(\d+)/)
+      return m ? parseInt(m[1]) : 0
+    })
+    const max = codes.length > 0 ? Math.max(...codes) : 0
+    return `NI-${String(max + 1).padStart(3, '0')}`
+  }
+
+  function openCreate() { setForm({ ...empty, project_code: nextCode() }); setModal('create') }
+  function handleChange(e) {
+    const updated = { ...form, [e.target.name]: e.target.value }
+    if (e.target.name === 'package') updated.deadline = calcDeadline(e.target.value)
+    setForm(updated)
+  }
 
   async function handleSave() {
     if (modal === 'create') await api.projects.create({ ...form, client_id: Number(form.client_id) || null, freelancer_id: Number(form.freelancer_id) || null })
@@ -93,7 +129,7 @@ export default function Projects() {
                 <th>Package</th>
                 <th>Price</th>
                 <th>Margin</th>
-                <th>Deadline</th>
+                <th>Days Left</th>
                 <th>Status</th>
                 <th></th>
               </tr>
@@ -106,9 +142,11 @@ export default function Projects() {
                     <td><span style={{ fontWeight: 700 }}>{p.project_code}</span></td>
                     <td>{p.company_name || <span className="text-muted">—</span>}</td>
                     <td>{p.package || <span className="text-muted">—</span>}</td>
-                    <td><span style={{ fontWeight: 600 }}>${p.client_price}</span></td>
+                    <td><span style={{ fontWeight: 600 }}>{p.client_price} FCFA</span></td>
                     <td><MarginBar pct={margin} /></td>
-                    <td style={{ fontSize: 12 }}>{p.deadline ? new Date(p.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : <span className="text-muted">—</span>}</td>
+                    <td style={{ fontSize: 12, fontWeight: 600, color: p.status === 'Completed' ? 'var(--text3)' : daysLeft(p.deadline) < 0 ? 'var(--red)' : daysLeft(p.deadline) <= 3 ? 'var(--orange)' : 'var(--green)' }}>
+                      {p.status === 'Completed' ? '✓ Done' : p.deadline ? daysLeft(p.deadline) + ' days' : <span className="text-muted">—</span>}
+                    </td>
                     <td><StatusBadge status={p.status} /></td>
                     <td>
                       <button className="btn btn-sm btn-ghost" onClick={e => { e.stopPropagation(); showDetail(p.id) }}>View</button>
@@ -133,9 +171,9 @@ export default function Projects() {
             <div className="detail-panel">
               <div className="detail-panel-header">Financials</div>
               <div className="detail-panel-body">
-                <div className="detail-row"><span className="label">Client Price</span><span className="value">${detail.client_price}</span></div>
-                <div className="detail-row"><span className="label">Freelancer Cost</span><span className="value">${detail.freelancer_cost}</span></div>
-                <div className="detail-row"><span className="label">Net Profit</span><span className="value" style={{ color: 'var(--green)', fontWeight: 700 }}>${detail.client_price - detail.freelancer_cost}</span></div>
+                <div className="detail-row"><span className="label">Client Price</span><span className="value">{detail.client_price} FCFA</span></div>
+                <div className="detail-row"><span className="label">Freelancer Cost</span><span className="value">{detail.freelancer_cost} FCFA</span></div>
+                <div className="detail-row"><span className="label">Net Profit</span><span className="value" style={{ color: 'var(--green)', fontWeight: 700 }}>{detail.client_price - detail.freelancer_cost} FCFA</span></div>
                 <div className="detail-row"><span className="label">Margin</span><span className="value"><MarginBar pct={((detail.client_price - detail.freelancer_cost) / detail.client_price * 100)} /></span></div>
               </div>
             </div>
@@ -146,7 +184,12 @@ export default function Projects() {
                 <div className="detail-row"><span className="label">Package</span><span className="value">{detail.package || '—'}</span></div>
                 <div className="detail-row"><span className="label">Status</span><span className="value"><StatusBadge status={detail.status} /></span></div>
                 <div className="detail-row"><span className="label">Freelancer</span><span className="value">{detail.freelancer_name || <span className="text-muted">—</span>}</span></div>
-                <div className="detail-row"><span className="label">Deadline</span><span className="value">{detail.deadline ? new Date(detail.deadline).toLocaleDateString() : '—'}</span></div>
+                <div className="detail-row">
+                  <span className="label">Days Left</span>
+                  <span className="value" style={{ color: detail.status === 'Completed' ? 'var(--text3)' : daysLeft(detail.deadline) < 0 ? 'var(--red)' : daysLeft(detail.deadline) <= 3 ? 'var(--orange)' : 'var(--green)' }}>
+                    {detail.status === 'Completed' ? '✓ Done' : detail.deadline ? `${daysLeft(detail.deadline)} days (${new Date(detail.deadline).toLocaleDateString()})` : <span className="text-muted">—</span>}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -201,7 +244,6 @@ export default function Projects() {
       {/* Create Project Modal */}
       {modal && (
         <Modal title="New Project" subtitle="Create a new project following the NI OS workflow" onClose={() => setModal(null)}>
-          <FormGroup label="Project Code"><input name="project_code" value={form.project_code} onChange={handleChange} placeholder="NI-004" /></FormGroup>
           <div className="form-row">
             <FormGroup label="Client">
               <select name="client_id" value={form.client_id} onChange={handleChange}>
@@ -221,12 +263,14 @@ export default function Projects() {
           </div>
 
           <div className="form-row">
-            <FormGroup label="Client Price ($)"><input type="number" name="client_price" value={form.client_price} onChange={handleChange} /></FormGroup>
-            <FormGroup label="Freelancer Cost ($)"><input type="number" name="freelancer_cost" value={form.freelancer_cost} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Client Price (FCFA)"><input type="number" name="client_price" value={form.client_price} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Freelancer Cost (FCFA)"><input type="number" name="freelancer_cost" value={form.freelancer_cost} onChange={handleChange} /></FormGroup>
           </div>
 
           <div className="form-row">
-            <FormGroup label="Deadline"><input type="date" name="deadline" value={form.deadline} onChange={handleChange} /></FormGroup>
+            <FormGroup label="Deadline (auto)">
+              <input type="date" name="deadline" value={form.deadline} style={{ color: 'var(--text3)' }} readOnly />
+            </FormGroup>
             <FormGroup label="Assign Freelancer">
               <select name="freelancer_id" value={form.freelancer_id} onChange={handleChange}>
                 <option value="">Select freelancer</option>

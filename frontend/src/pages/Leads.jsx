@@ -118,7 +118,7 @@ export default function Leads() {
             </FormGroup>
             <FormGroup label="Budget Range">
               <select name="budget_range" value={form.budget_range} onChange={handleChange}>
-                <option value="">Select</option><option>$80-$150</option><option>$150-$300</option><option>$300-$700</option><option>$700-$1500</option>
+                <option value="">Select</option><option>80-150 FCFA</option><option>150-300 FCFA</option><option>300-700 FCFA</option><option>700-1 500 FCFA</option>
               </select>
             </FormGroup>
           </div>
