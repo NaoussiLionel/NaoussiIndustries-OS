@@ -1,0 +1,7 @@
+node_modules/
+dist/
+ni_os.db
+*.log
+.env
+.DS_Store
+Thumbs.db
