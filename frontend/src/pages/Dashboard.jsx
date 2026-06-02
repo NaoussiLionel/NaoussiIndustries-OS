@@ -138,10 +138,10 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              <tr><td>Starter Brand Kit</td><td>80–150 FCFA</td><td><StatusBadge status="Active" label="60% margin" /></td></tr>
-              <tr><td>Business Identity Pack</td><td>150–300 FCFA</td><td><StatusBadge status="Active" label="65% margin" /></td></tr>
-              <tr><td>Growth Brand System</td><td>300–700 FCFA</td><td><StatusBadge status="Active" label="70% margin" /></td></tr>
-              <tr><td>Premium Strategy Pack</td><td>700–1 500+ FCFA</td><td><StatusBadge status="Active" label="75% margin" /></td></tr>
+              <tr><td>Starter Brand Kit</td><td>80 FCFA</td><td><StatusBadge status="Active" label="60% margin" /></td></tr>
+              <tr><td>Business Identity Pack</td><td>150 FCFA</td><td><StatusBadge status="Active" label="65% margin" /></td></tr>
+              <tr><td>Growth Brand System</td><td>300 FCFA</td><td><StatusBadge status="Active" label="70% margin" /></td></tr>
+              <tr><td>Premium Strategy Pack</td><td>700 FCFA</td><td><StatusBadge status="Active" label="75% margin" /></td></tr>
             </tbody>
           </table>
         </div>

@@ -28,7 +28,7 @@ BUSINESS RULES:
 - Lead Pipeline: Cold Lead → Contacted → Qualified → Proposal Sent → Closed Won / Closed Lost.
 
 PRICING PACKAGES (in FCFA):
-${pkgs.length > 0 ? pkgs.map(p => `- ${p.name}: Client ${p.client_price_min}-${p.client_price_max} FCFA · Freelancer ${p.freelancer_cost_min}-${p.freelancer_cost_max} FCFA · Target ${p.target_margin_pct}% margin`).join('\n') : 'No packages configured yet.'}
+${pkgs.length > 0 ? pkgs.map(p => `- ${p.name}: Client ${p.client_price} FCFA · Freelancer ${p.freelancer_cost} FCFA · Target ${p.target_margin_pct}% margin`).join('\n') : 'No packages configured yet.'}
 
 MARGIN ZONE SYSTEM:
 - 🟢 Green (60%+): Healthy. Maintain pricing. Consider premium positioning.

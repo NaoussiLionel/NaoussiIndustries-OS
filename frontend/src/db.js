@@ -29,10 +29,10 @@ const defaultData = {
   project_stages: [],
   invoices: [],
   pricing_packages: [
-    { id: 1, name: 'Starter Brand Kit', client_price_min: 80, client_price_max: 150, freelancer_cost_min: 30, freelancer_cost_max: 60, target_margin_pct: 60, description: 'Basic logo and brand identity starter', created_at: now(), updated_at: now() },
-    { id: 2, name: 'Business Identity Pack', client_price_min: 150, client_price_max: 300, freelancer_cost_min: 60, freelancer_cost_max: 120, target_margin_pct: 65, description: 'Full business identity suite', created_at: now(), updated_at: now() },
-    { id: 3, name: 'Growth Brand System', client_price_min: 300, client_price_max: 700, freelancer_cost_min: 120, freelancer_cost_max: 250, target_margin_pct: 70, description: 'Comprehensive brand system', created_at: now(), updated_at: now() },
-    { id: 4, name: 'Premium Strategy Pack', client_price_min: 700, client_price_max: 1500, freelancer_cost_min: 250, freelancer_cost_max: 500, target_margin_pct: 75, description: 'Strategic brand development', created_at: now(), updated_at: now() },
+    { id: 1, name: 'Starter Brand Kit', client_price: 80, freelancer_cost: 30, target_margin_pct: 60, description: 'Basic logo and brand identity starter', created_at: now(), updated_at: now() },
+    { id: 2, name: 'Business Identity Pack', client_price: 150, freelancer_cost: 60, target_margin_pct: 65, description: 'Full business identity suite', created_at: now(), updated_at: now() },
+    { id: 3, name: 'Growth Brand System', client_price: 300, freelancer_cost: 120, target_margin_pct: 70, description: 'Comprehensive brand system', created_at: now(), updated_at: now() },
+    { id: 4, name: 'Premium Strategy Pack', client_price: 700, freelancer_cost: 250, target_margin_pct: 75, description: 'Strategic brand development', created_at: now(), updated_at: now() },
   ]
 }
 
