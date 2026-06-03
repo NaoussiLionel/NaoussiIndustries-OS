@@ -2,79 +2,106 @@ import { useState, useEffect } from 'react'
 import { api } from '../api'
 import Modal, { FormGroup } from '../components/Modal'
 
+function toLines(text) {
+  return (text || '').split('\n').filter(Boolean)
+}
+
 function buildCatalogueHtml(packages) {
-  const body = packages.map(p => `<div class="pkg" style="page-break-before:always;">
-    <div class="pkg-header">
-      <div class="pkg-name">${p.name}</div>
-      <div class="pkg-price">${Number(p.client_price).toLocaleString()} <small>FCFA</small></div>
-    </div>
-    <div class="pkg-section">
-      <div class="pkg-section-title">📦 What's Included</div>
-      <div class="pkg-desc">${p.description || 'Full brand identity package with strategic positioning, visual design, and delivery assets.'}</div>
-    </div>
-    <div class="pkg-section">
-      <div class="pkg-section-title">🎯 Best For</div>
-      <div class="pkg-desc">${p.use_case || 'Businesses looking for professional brand identity services.'}</div>
-    </div>
-    <div class="pkg-section">
-      <div class="pkg-section-title">✨ Why Choose This Pack</div>
-      <div class="pkg-desc" style="font-weight:500;color:#333;">${p.client_advantage || 'A professional brand identity that sets you apart and builds trust with your customers.'}</div>
-    </div>
-  </div>`).join('')
+  const body = packages.map(p => {
+    const lines = toLines(p.description)
+    const useCases = toLines(p.use_case)
+    const advantage = toLines(p.client_advantage)
+    const cta = advantage.length > 0 && advantage[advantage.length - 1].startsWith('👉') ? advantage.pop() : ''
+    const isLast = p === packages[packages.length - 1]
+
+    return `<div class="pkg">
+      <div class="pkg-header">
+        <div class="pkg-name">${p.name}</div>
+        <div class="pkg-price">${Number(p.client_price).toLocaleString()} <small>FCFA</small></div>
+      </div>
+
+      <div class="pkg-section">
+        <div class="pkg-section-title">📦 Ce que comprend ce pack</div>
+        <ul class="pkg-list">
+          ${lines.map(l => `<li>${l}</li>`).join('')}
+        </ul>
+      </div>
+
+      <div class="pkg-section">
+        <div class="pkg-section-title">🎯 À qui s'adresse ce pack</div>
+        <div class="pkg-cards">
+          ${useCases.map((uc, i) => {
+            const icons = ['🚀', '💼', '🏆']
+            return `<div class="pkg-card"><span class="pkg-card-icon">${icons[i] || '•'}</span><span>${uc}</span></div>`
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="pkg-section pkg-why">
+        <div class="pkg-section-title">✨ Pourquoi choisir ce pack</div>
+        ${advantage.map(a => a.trim() ? `<p class="pkg-why-line">${a}</p>` : `<br>`).join('')}
+        ${cta ? `<div class="pkg-cta">${cta}</div>` : ''}
+      </div>
+      ${!isLast ? '<div class="pkg-footer">— Continuez vers le prochain pack —</div>' : ''}
+    </div>`
+  }).join('')
 
   return `<!DOCTYPE html><html><head>
     <meta charset="utf-8">
-    <title>NI OS — Pricing Catalogue</title>
+    <title>NI OS — Catalogue des Packs</title>
     <style>
-      @page { margin: 18mm; }
-      body { font-family: 'Helvetica', Arial, sans-serif; color: #222; font-size: 12px; line-height: 1.5; padding: 30px; }
+      @page { margin: 0; }
+      body { font-family: 'Helvetica', Arial, sans-serif; color: #222; font-size: 11px; line-height: 1.6; margin: 0; padding: 0; }
       .tb { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: #6c5ce7; padding: 10px 20px; text-align: center; }
       .tb button { background: #fff; color: #6c5ce7; border: none; padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
-      .tb button:hover { background: #f0edff; }
       @media print { .tb { display: none; } }
-      .cover { text-align: center; padding: 80px 0 40px; border-bottom: 2px solid #6c5ce7; margin-bottom: 40px; margin-top: 40px; }
-      .cover h1 { font-size: 36px; color: #6c5ce7; margin: 0 0 6px; letter-spacing: -1px; }
-      .cover .subtitle { font-size: 14px; color: #888; }
-      .cover .date { font-size: 10px; color: #aaa; margin-top: 20px; }
-      .intro { text-align: center; color: #666; font-size: 11px; margin-bottom: 40px; }
-      .pkg { page-break-inside: avoid; margin-bottom: 36px; border: 1px solid #eee; border-radius: 8px; padding: 24px 28px; }
-      .pkg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-      .pkg-name { font-size: 20px; font-weight: 700; color: #6c5ce7; margin: 0; }
-      .pkg-price { font-size: 18px; font-weight: 700; }
-      .pkg-price small { font-size: 11px; font-weight: 400; color: #888; }
+      .pkg { page-break-after: always; min-height: 297mm; display: flex; flex-direction: column; padding: 24mm 22mm 18mm; box-sizing: border-box; position: relative; }
+      .pkg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 3px solid #6c5ce7; }
+      .pkg-name { font-size: 22px; font-weight: 800; color: #6c5ce7; margin: 0; line-height: 1.2; }
+      .pkg-price { font-size: 20px; font-weight: 700; white-space: nowrap; }
+      .pkg-price small { font-size: 12px; font-weight: 400; color: #888; }
       .pkg-section { margin-bottom: 16px; }
-      .pkg-section:last-child { margin-bottom: 0; }
-      .pkg-section-title { font-size: 11px; font-weight: 600; color: #6c5ce7; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-      .pkg-desc { font-size: 12px; color: #555; line-height: 1.7; }
-      .pkg-desc strong { color: #333; }
-      .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 9px; color: #aaa; }
-      .zone-table { width: 100%; border-collapse: collapse; margin-top: 40px; page-break-inside: avoid; }
-      .zone-table th { background: #f5f5f5; padding: 8px 14px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; }
-      .zone-table td { padding: 10px 14px; border-bottom: 1px solid #eee; font-size: 12px; }
+      .pkg-section-title { font-size: 10px; font-weight: 700; color: #6c5ce7; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+      .pkg-list { margin: 0; padding-left: 18px; }
+      .pkg-list li { margin-bottom: 4px; font-size: 11px; color: #444; }
+      .pkg-cards { display: flex; flex-direction: column; gap: 6px; }
+      .pkg-card { display: flex; align-items: center; gap: 8px; background: #f8f6ff; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #444; }
+      .pkg-card-icon { font-size: 16px; flex-shrink: 0; }
+      .pkg-why { flex: 1; }
+      .pkg-why-line { font-size: 12px; color: #333; margin: 0 0 6px; line-height: 1.7; }
+      .pkg-cta { margin-top: 20px; background: #6c5ce7; color: #fff; padding: 14px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; }
+      .pkg-footer { text-align: center; font-size: 9px; color: #ccc; margin-top: auto; padding-top: 20px; }
+      .cover { text-align: center; padding: 60mm 22mm 30mm; min-height: 297mm; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }
+      .cover h1 { font-size: 38px; color: #6c5ce7; margin: 0 0 8px; letter-spacing: -1px; }
+      .cover .subtitle { font-size: 14px; color: #888; margin-bottom: 6px; }
+      .cover .date { font-size: 10px; color: #aaa; }
+      .cover .intro { margin-top: 30px; font-size: 11px; color: #666; line-height: 1.8; }
+      .cover .cta-large { margin-top: 40px; font-size: 16px; font-weight: 700; color: #6c5ce7; }
     </style>
   </head><body>
-    <div class="tb"><button onclick="window.print()">📥 Download PDF</button></div>
+    <div class="tb"><button onclick="window.print()">📥 Télécharger le PDF</button></div>
     <div class="cover">
       <h1>NAOUSSI INDUSTRIES</h1>
-      <div class="subtitle">Design & Brand Strategy — Pricing Catalogue</div>
+      <div class="subtitle">Design & Brand Strategy</div>
       <div class="date">${new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-    </div>
-    <div class="intro">
-      Standard pricing packages for brand identity and design strategy services.<br>
-      All prices are in FCFA (Franc CFA).
+      <div class="intro">
+        <strong>CATALOGUE DES PACKS</strong><br>
+        Découvrez nos formules de branding adaptées à chaque étape de votre croissance.<br>
+        Tous les prix sont en FCFA — investissement unique, résultats durables.
+      </div>
+      <div class="cta-large">👇 Feuilletez pour trouver le pack qui vous correspond</div>
     </div>
     ${body}
-    <h3 style="margin-top:40px; font-size:14px; color:#333; page-break-before:always;">Margin Zone Reference</h3>
-    <table class="zone-table">
-      <thead><tr><th>Zone</th><th>Range</th><th>Action</th></tr></thead>
-      <tbody>
-        <tr><td style="color:#00b894;font-weight:600;">🟢 Green</td><td>60% – 100%</td><td>Healthy margin. Maintain pricing. Consider premium positioning.</td></tr>
-        <tr><td style="color:#f39c12;font-weight:600;">🟠 Orange</td><td>40% – 59%</td><td>Warning. Review freelancer costs or increase pricing.</td></tr>
-        <tr><td style="color:#e74c3c;font-weight:600;">🔴 Red</td><td>0% – 39%</td><td>Critical. Immediate financial review needed.</td></tr>
-      </tbody>
-    </table>
-    <div class="footer">
-      Naoussi Industries &middot; Confidential Pricing Document &middot; Generated ${new Date().toLocaleString('en-GB')}
+    <div style="page-break-after:always;padding:24mm 22mm;min-height:297mm;box-sizing:border-box;">
+      <h2 style="font-size:18px;color:#6c5ce7;margin:0 0 20px;">🔍 Vous hésitez encore ?</h2>
+      <p style="font-size:12px;color:#555;line-height:1.8;margin-bottom:30px;">
+        Chaque entreprise est unique. Si aucun de ces packs ne correspond exactement à vos besoins,<br>
+        nous pouvons créer une solution sur mesure pour vous.
+      </p>
+      <div style="background:#f8f6ff;border-radius:8px;padding:20px;">
+        <p style="font-size:12px;color:#333;margin:0 0 6px;"><strong>📞 Contactez-nous pour un devis personnalisé</strong></p>
+        <p style="font-size:11px;color:#666;margin:0;">Email : contact@naoussi-industries.com</p>
+      </div>
     </div>
   </body></html>`
 }
