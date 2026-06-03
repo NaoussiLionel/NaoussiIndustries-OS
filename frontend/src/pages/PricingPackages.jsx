@@ -2,16 +2,26 @@ import { useState, useEffect } from 'react'
 import { api } from '../api'
 import Modal, { FormGroup } from '../components/Modal'
 
-function printCatalogue(packages) {
-  if (packages.length === 0) return
-  const w = window.open('', '_blank')
-  w.document.write(`<!DOCTYPE html><html><head>
+function buildCatalogueHtml(packages) {
+  const body = packages.map(p => `<div class="pkg" style="page-break-before:always;">
+    <div class="pkg-header">
+      <div class="pkg-name">${p.name}</div>
+      <div class="pkg-price">${Number(p.client_price).toLocaleString()} <small>FCFA</small></div>
+    </div>
+    <div class="pkg-desc">${p.description || 'Full brand identity package with strategic positioning, visual design, and delivery assets.'}</div>
+  </div>`).join('')
+
+  return `<!DOCTYPE html><html><head>
     <meta charset="utf-8">
     <title>NI OS — Pricing Catalogue</title>
     <style>
       @page { margin: 18mm; }
       body { font-family: 'Helvetica', Arial, sans-serif; color: #222; font-size: 12px; line-height: 1.5; padding: 30px; }
-      .cover { text-align: center; padding: 80px 0 40px; border-bottom: 2px solid #6c5ce7; margin-bottom: 40px; }
+      .tb { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: #6c5ce7; padding: 10px 20px; text-align: center; }
+      .tb button { background: #fff; color: #6c5ce7; border: none; padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+      .tb button:hover { background: #f0edff; }
+      @media print { .tb { display: none; } }
+      .cover { text-align: center; padding: 80px 0 40px; border-bottom: 2px solid #6c5ce7; margin-bottom: 40px; margin-top: 40px; }
       .cover h1 { font-size: 36px; color: #6c5ce7; margin: 0 0 6px; letter-spacing: -1px; }
       .cover .subtitle { font-size: 14px; color: #888; }
       .cover .date { font-size: 10px; color: #aaa; margin-top: 20px; }
@@ -22,18 +32,13 @@ function printCatalogue(packages) {
       .pkg-price { font-size: 18px; font-weight: 700; }
       .pkg-price small { font-size: 11px; font-weight: 400; color: #888; }
       .pkg-desc { font-size: 12px; color: #555; margin-bottom: 14px; line-height: 1.7; }
-      .pkg-meta { display: flex; gap: 40px; font-size: 12px; color: #666; }
-      .pkg-meta strong { color: #333; }
-      .pkg-hl { display: flex; gap: 20px; margin-top: 12px; }
-      .pkg-hl-item { background: #f8f6ff; border-radius: 6px; padding: 8px 14px; flex: 1; text-align: center; }
-      .pkg-hl-item .val { font-size: 16px; font-weight: 700; color: #6c5ce7; }
-      .pkg-hl-item .lbl { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
       .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 9px; color: #aaa; }
       .zone-table { width: 100%; border-collapse: collapse; margin-top: 40px; page-break-inside: avoid; }
       .zone-table th { background: #f5f5f5; padding: 8px 14px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; }
       .zone-table td { padding: 10px 14px; border-bottom: 1px solid #eee; font-size: 12px; }
     </style>
   </head><body>
+    <div class="tb"><button onclick="window.print()">📥 Download PDF</button></div>
     <div class="cover">
       <h1>NAOUSSI INDUSTRIES</h1>
       <div class="subtitle">Design & Brand Strategy — Pricing Catalogue</div>
@@ -43,14 +48,7 @@ function printCatalogue(packages) {
       Standard pricing packages for brand identity and design strategy services.<br>
       All prices are in FCFA (Franc CFA).
     </div>
-    ${packages.map(p => `<div class="pkg" style="page-break-before:always;">
-        <div class="pkg-header">
-          <div class="pkg-name">${p.name}</div>
-          <div class="pkg-price">${Number(p.client_price).toLocaleString()} <small>FCFA</small></div>
-        </div>
-        <div class="pkg-desc">${p.description || 'Full brand identity package with strategic positioning, visual design, and delivery assets.'}</div>
-      </div>`
-    ).join('')}
+    ${body}
     <h3 style="margin-top:40px; font-size:14px; color:#333; page-break-before:always;">Margin Zone Reference</h3>
     <table class="zone-table">
       <thead><tr><th>Zone</th><th>Range</th><th>Action</th></tr></thead>
@@ -63,9 +61,22 @@ function printCatalogue(packages) {
     <div class="footer">
       Naoussi Industries &middot; Confidential Pricing Document &middot; Generated ${new Date().toLocaleString('en-GB')}
     </div>
-    <script>window.print()</script>
-  </body></html>`)
+  </body></html>`
+}
+
+function viewCatalogue(packages) {
+  if (packages.length === 0) return
+  const w = window.open('', '_blank')
+  w.document.write(buildCatalogueHtml(packages))
   w.document.close()
+}
+
+function printCatalogue(packages) {
+  if (packages.length === 0) return
+  const w = window.open('', '_blank')
+  w.document.write(buildCatalogueHtml(packages).replace('<div class="tb">', '<div class="tb" style="display:none">'))
+  w.document.close()
+  setTimeout(() => w.print(), 300)
 }
 
 export default function PricingPackages() {
@@ -87,9 +98,14 @@ export default function PricingPackages() {
     <div>
       <div className="page-header">
         <h2>Pricing Packages</h2>
-        <button className="btn btn-primary" onClick={() => printCatalogue(packages)} disabled={packages.length === 0}>
-          📥 Download Catalogue
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn btn-ghost" onClick={() => viewCatalogue(packages)} disabled={packages.length === 0}>
+            👁️ View Catalogue
+          </button>
+          <button className="btn btn-primary" onClick={() => printCatalogue(packages)} disabled={packages.length === 0}>
+            📥 Download Catalogue
+          </button>
+        </div>
       </div>
 
       <div className="card">
