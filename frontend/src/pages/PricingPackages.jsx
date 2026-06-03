@@ -41,24 +41,17 @@ function printCatalogue(packages) {
     </div>
     <div class="intro">
       Standard pricing packages for brand identity and design strategy services.<br>
-      All prices are in FCFA (Franc CFA). Freelancer costs are per-project flat rates.
+      All prices are in FCFA (Franc CFA).
     </div>
-    ${packages.map(p => {
-      const margin = p.client_price > 0 ? Math.round(((p.client_price - p.freelancer_cost) / p.client_price) * 100) : 0
-      return `<div class="pkg">
+    ${packages.map(p => `<div class="pkg" style="page-break-before:always;">
         <div class="pkg-header">
           <div class="pkg-name">${p.name}</div>
           <div class="pkg-price">${Number(p.client_price).toLocaleString()} <small>FCFA</small></div>
         </div>
         <div class="pkg-desc">${p.description || 'Full brand identity package with strategic positioning, visual design, and delivery assets.'}</div>
-        <div class="pkg-hl">
-          <div class="pkg-hl-item"><div class="val">${Number(p.freelancer_cost).toLocaleString()} FCFA</div><div class="lbl">Freelancer Cost</div></div>
-          <div class="pkg-hl-item"><div class="val">${margin}%</div><div class="lbl">Target Margin</div></div>
-          <div class="pkg-hl-item"><div class="val">${p.target_margin_pct}%</div><div class="lbl">Minimum Margin</div></div>
-        </div>
       </div>`
-    }).join('')}
-    <h3 style="margin-top:40px; font-size:14px; color:#333;">Margin Zone Reference</h3>
+    ).join('')}
+    <h3 style="margin-top:40px; font-size:14px; color:#333; page-break-before:always;">Margin Zone Reference</h3>
     <table class="zone-table">
       <thead><tr><th>Zone</th><th>Range</th><th>Action</th></tr></thead>
       <tbody>
