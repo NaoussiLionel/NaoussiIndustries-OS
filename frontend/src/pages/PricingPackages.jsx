@@ -42,6 +42,33 @@ function buildCatalogueHtml(packages) {
         ${advantage.map(a => a.trim() ? `<p class="pkg-why-line">${a}</p>` : `<br>`).join('')}
         ${cta ? `<div class="pkg-cta">${cta}</div>` : ''}
       </div>
+
+      <div class="pkg-section">
+        <div class="pkg-section-title">⚙️ Comment ça marche</div>
+        <div class="pkg-process">
+          <div class="pkg-process-step"><span class="p-step-num">1</span><span class="p-step-label">Devis</span></div>
+          <div class="pkg-process-arrow">→</div>
+          <div class="pkg-process-step"><span class="p-step-num">2</span><span class="p-step-label">Acompte 50%</span></div>
+          <div class="pkg-process-arrow">→</div>
+          <div class="pkg-process-step"><span class="p-step-num">3</span><span class="p-step-label">Production</span></div>
+          <div class="pkg-process-arrow">→</div>
+          <div class="pkg-process-step"><span class="p-step-num">4</span><span class="p-step-label">2 révisions max</span></div>
+          <div class="pkg-process-arrow">→</div>
+          <div class="pkg-process-step"><span class="p-step-num">5</span><span class="p-step-label">Validation finale</span></div>
+          <div class="pkg-process-arrow">→</div>
+          <div class="pkg-process-step"><span class="p-step-num">6</span><span class="p-step-label">Solde 50%</span></div>
+          <div class="pkg-process-arrow">→</div>
+          <div class="pkg-process-step"><span class="p-step-num">7</span><span class="p-step-label">Livraison</span></div>
+        </div>
+      </div>
+
+      <div class="pkg-section">
+        <div class="pkg-rules">
+          <div class="pkg-rule"><span class="pkg-rule-icon">💰</span><span class="pkg-rule-text"><strong>Paiement :</strong> 50% d'acompte avant le début des travaux, 50% avant la livraison finale</span></div>
+          <div class="pkg-rule"><span class="pkg-rule-icon">🔄</span><span class="pkg-rule-text"><strong>Révisions :</strong> Maximum 2 rounds par pack — toute modification supplémentaire fait l'objet d'un nouveau devis</span></div>
+          <div class="pkg-rule"><span class="pkg-rule-icon">📅</span><span class="pkg-rule-text"><strong>Délai :</strong> Livraison sous ${p.name === 'Starter Brand Kit' ? '14' : p.name === 'Business Identity Pack' ? '21' : p.name === 'Growth Brand System' ? '30' : '45'} jours calendaires</span></div>
+        </div>
+      </div>
       ${!isLast ? '<div class="pkg-footer">— Continuez vers le prochain pack —</div>' : ''}
     </div>`
   }).join('')
@@ -70,6 +97,16 @@ function buildCatalogueHtml(packages) {
       .pkg-why { flex: 1; }
       .pkg-why-line { font-size: 12px; color: #333; margin: 0 0 6px; line-height: 1.7; }
       .pkg-cta { margin-top: 20px; background: #6c5ce7; color: #fff; padding: 14px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; }
+      .pkg-process { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; background: #f8f6ff; border-radius: 8px; padding: 10px 14px; }
+      .pkg-process-step { display: flex; align-items: center; gap: 5px; }
+      .p-step-num { width: 18px; height: 18px; border-radius: 50%; background: #6c5ce7; color: #fff; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      .p-step-label { font-size: 9px; color: #555; font-weight: 500; white-space: nowrap; }
+      .pkg-process-arrow { color: #ccc; font-size: 10px; }
+      .pkg-rules { display: flex; flex-direction: column; gap: 6px; }
+      .pkg-rule { display: flex; align-items: flex-start; gap: 8px; font-size: 10px; color: #666; }
+      .pkg-rule-icon { flex-shrink: 0; font-size: 12px; }
+      .pkg-rule-text { line-height: 1.5; }
+      .pkg-rule-text strong { color: #444; }
       .pkg-footer { text-align: center; font-size: 9px; color: #ccc; margin-top: auto; padding-top: 20px; }
       .cover { text-align: center; padding: 60mm 22mm 30mm; min-height: 297mm; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }
       .cover h1 { font-size: 38px; color: #6c5ce7; margin: 0 0 8px; letter-spacing: -1px; }
