@@ -2,6 +2,79 @@ import { useState, useEffect } from 'react'
 import { api } from '../api'
 import Modal, { FormGroup } from '../components/Modal'
 
+function printCatalogue(packages) {
+  if (packages.length === 0) return
+  const w = window.open('', '_blank')
+  w.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <title>NI OS — Pricing Catalogue</title>
+    <style>
+      @page { margin: 18mm; }
+      body { font-family: 'Helvetica', Arial, sans-serif; color: #222; font-size: 12px; line-height: 1.5; padding: 30px; }
+      .cover { text-align: center; padding: 80px 0 40px; border-bottom: 2px solid #6c5ce7; margin-bottom: 40px; }
+      .cover h1 { font-size: 36px; color: #6c5ce7; margin: 0 0 6px; letter-spacing: -1px; }
+      .cover .subtitle { font-size: 14px; color: #888; }
+      .cover .date { font-size: 10px; color: #aaa; margin-top: 20px; }
+      .intro { text-align: center; color: #666; font-size: 11px; margin-bottom: 40px; }
+      .pkg { page-break-inside: avoid; margin-bottom: 36px; border: 1px solid #eee; border-radius: 8px; padding: 24px 28px; }
+      .pkg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+      .pkg-name { font-size: 20px; font-weight: 700; color: #6c5ce7; margin: 0; }
+      .pkg-price { font-size: 18px; font-weight: 700; }
+      .pkg-price small { font-size: 11px; font-weight: 400; color: #888; }
+      .pkg-desc { font-size: 12px; color: #555; margin-bottom: 14px; line-height: 1.7; }
+      .pkg-meta { display: flex; gap: 40px; font-size: 12px; color: #666; }
+      .pkg-meta strong { color: #333; }
+      .pkg-hl { display: flex; gap: 20px; margin-top: 12px; }
+      .pkg-hl-item { background: #f8f6ff; border-radius: 6px; padding: 8px 14px; flex: 1; text-align: center; }
+      .pkg-hl-item .val { font-size: 16px; font-weight: 700; color: #6c5ce7; }
+      .pkg-hl-item .lbl { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+      .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 9px; color: #aaa; }
+      .zone-table { width: 100%; border-collapse: collapse; margin-top: 40px; page-break-inside: avoid; }
+      .zone-table th { background: #f5f5f5; padding: 8px 14px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; }
+      .zone-table td { padding: 10px 14px; border-bottom: 1px solid #eee; font-size: 12px; }
+    </style>
+  </head><body>
+    <div class="cover">
+      <h1>NAOUSSI INDUSTRIES</h1>
+      <div class="subtitle">Design & Brand Strategy — Pricing Catalogue</div>
+      <div class="date">${new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+    </div>
+    <div class="intro">
+      Standard pricing packages for brand identity and design strategy services.<br>
+      All prices are in FCFA (Franc CFA). Freelancer costs are per-project flat rates.
+    </div>
+    ${packages.map(p => {
+      const margin = p.client_price > 0 ? Math.round(((p.client_price - p.freelancer_cost) / p.client_price) * 100) : 0
+      return `<div class="pkg">
+        <div class="pkg-header">
+          <div class="pkg-name">${p.name}</div>
+          <div class="pkg-price">${Number(p.client_price).toLocaleString()} <small>FCFA</small></div>
+        </div>
+        <div class="pkg-desc">${p.description || 'Full brand identity package with strategic positioning, visual design, and delivery assets.'}</div>
+        <div class="pkg-hl">
+          <div class="pkg-hl-item"><div class="val">${Number(p.freelancer_cost).toLocaleString()} FCFA</div><div class="lbl">Freelancer Cost</div></div>
+          <div class="pkg-hl-item"><div class="val">${margin}%</div><div class="lbl">Target Margin</div></div>
+          <div class="pkg-hl-item"><div class="val">${p.target_margin_pct}%</div><div class="lbl">Minimum Margin</div></div>
+        </div>
+      </div>`
+    }).join('')}
+    <h3 style="margin-top:40px; font-size:14px; color:#333;">Margin Zone Reference</h3>
+    <table class="zone-table">
+      <thead><tr><th>Zone</th><th>Range</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td style="color:#00b894;font-weight:600;">🟢 Green</td><td>60% – 100%</td><td>Healthy margin. Maintain pricing. Consider premium positioning.</td></tr>
+        <tr><td style="color:#f39c12;font-weight:600;">🟠 Orange</td><td>40% – 59%</td><td>Warning. Review freelancer costs or increase pricing.</td></tr>
+        <tr><td style="color:#e74c3c;font-weight:600;">🔴 Red</td><td>0% – 39%</td><td>Critical. Immediate financial review needed.</td></tr>
+      </tbody>
+    </table>
+    <div class="footer">
+      Naoussi Industries &middot; Confidential Pricing Document &middot; Generated ${new Date().toLocaleString('en-GB')}
+    </div>
+    <script>window.print()</script>
+  </body></html>`)
+  w.document.close()
+}
+
 export default function PricingPackages() {
   const [packages, setPackages] = useState([])
   const [modal, setModal] = useState(null)
@@ -21,6 +94,9 @@ export default function PricingPackages() {
     <div>
       <div className="page-header">
         <h2>Pricing Packages</h2>
+        <button className="btn btn-primary" onClick={() => printCatalogue(packages)} disabled={packages.length === 0}>
+          📥 Download Catalogue
+        </button>
       </div>
 
       <div className="card">
