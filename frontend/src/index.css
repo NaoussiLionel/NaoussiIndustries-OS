@@ -149,7 +149,22 @@ body {
   flex: 1;
   margin-left: 260px;
   padding: 0;
-  max-width: calc(100vw - 260px);
+  min-width: 0;
+}
+
+/* ── Assistant Panel (Right 25%) ── */
+.assistant-panel {
+  width: 25vw;
+  min-width: 280px;
+  max-width: 480px;
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .main-header {
@@ -756,65 +771,17 @@ table tbody tr:last-child td {
 
 /* ── ChatBot ── */
 .chatbot {
-  position: relative;
-  border-top: 1px solid var(--border);
-}
-
-.chatbot-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 10px 16px;
-  background: none;
-  border: none;
-  color: var(--text2);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.15s;
-}
-
-.chatbot-toggle:hover {
-  background: var(--surface);
-  color: var(--text);
-}
-
-.chatbot-toggle-icon {
-  font-size: 16px;
-  width: 20px;
-  text-align: center;
-}
-
-.chatbot-toggle-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-}
-
-.chatbot-panel {
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  right: 0;
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  border-bottom: none;
-  border-radius: var(--radius) var(--radius) 0 0;
   display: flex;
   flex-direction: column;
-  max-height: 400px;
-  z-index: 100;
-  box-shadow: 0 -8px 32px rgba(0,0,0,0.3);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .chatbot-header {
-  padding: 12px 16px;
+  padding: 16px 16px 12px;
   border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-  border-radius: var(--radius) var(--radius) 0 0;
+  flex-shrink: 0;
 }
 
 .chatbot-title {
@@ -836,8 +803,7 @@ table tbody tr:last-child td {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-height: 200px;
-  max-height: 220px;
+  min-height: 0;
 }
 
 .chatbot-msg {
@@ -935,15 +901,17 @@ table tbody tr:last-child td {
 @media (max-width: 1200px) {
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .assistant-panel { min-width: 240px; }
 }
 
 @media (max-width: 900px) {
   .sidebar { width: 200px; }
-  .main { margin-left: 200px; max-width: calc(100vw - 200px); }
+  .main { margin-left: 200px; }
   .main-body, .main-header { padding-left: 20px; padding-right: 20px; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .kpi-ticker { flex-wrap: wrap; }
   .kpi-ticker-item { flex: 1 0 33%; }
+  .assistant-panel { min-width: 220px; max-width: 280px; }
 }
 
 @media (max-width: 640px) {
@@ -952,11 +920,10 @@ table tbody tr:last-child td {
   .sidebar .sidebar-brand .subtitle,
   .sidebar .sidebar-nav a span:last-child,
   .sidebar .sidebar-section-label,
-  .sidebar-footer,
-  .chatbot { display: none; }
+  .sidebar-footer { display: none; }
   .sidebar .sidebar-nav a { justify-content: center; padding: 10px; }
   .sidebar .sidebar-nav a .nav-icon { margin: 0; }
-  .main { margin-left: 56px; max-width: calc(100vw - 56px); }
+  .main { margin-left: 56px; }
   .main-body, .main-header { padding-left: 14px; padding-right: 14px; }
   .stat-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
   .stat-card { padding: 14px; }
@@ -965,4 +932,5 @@ table tbody tr:last-child td {
   .stage-flow { gap: 4px; }
   .stage-step { min-width: 60px; }
   .stage-label { font-size: 8px; max-width: 50px; }
+  .assistant-panel { display: none; }
 }

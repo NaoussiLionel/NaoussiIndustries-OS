@@ -60,7 +60,6 @@ export default function Layout({ children }) {
             </div>
           ))}
         </div>
-        <ChatBot />
         <div className="sidebar-footer">
           Naoussi Industries OS
         </div>
@@ -70,6 +69,9 @@ export default function Layout({ children }) {
           <h2>{pageTitle}</h2>
         </div>
         <div className="main-body">{children}</div>
+      </div>
+      <div className="assistant-panel">
+        <ChatBot />
       </div>
     </div>
   )

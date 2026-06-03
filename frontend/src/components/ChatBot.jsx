@@ -71,7 +71,6 @@ Respond conversationally in French or English based on the user's language. Be c
 }
 
 export default function ChatBot() {
-  const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState([
     { role: 'bot', text: '👋 Bonjour! I\'m your NI OS assistant powered by AI. Ask me anything about your business — projects, clients, finances, or operating rules.' }
   ])
@@ -156,58 +155,47 @@ export default function ChatBot() {
   }
 
   return (
-    <div className={`chatbot ${open ? 'chatbot-open' : ''}`}>
-      <button className="chatbot-toggle" onClick={() => setOpen(!open)} title="Business Assistant">
-        <span className="chatbot-toggle-icon">{open ? '✕' : '💬'}</span>
-        <span className="chatbot-toggle-label">Assistant</span>
-      </button>
+    <div className="chatbot">
+      <div className="chatbot-header">
+        <div className="chatbot-title">NI OS Assistant</div>
+        <div className="chatbot-subtitle">AI · {puterReady ? 'Connected' : 'Loading...'}</div>
+      </div>
 
-      {open && (
-        <div className="chatbot-panel">
-          <div className="chatbot-header">
-            <div>
-              <div className="chatbot-title">NI OS Assistant</div>
-              <div className="chatbot-subtitle">AI · {puterReady ? 'Connected' : 'Loading...'}</div>
-            </div>
-          </div>
-
-          <div className="chatbot-messages">
-            {messages.map((m, i) => (
-              <div key={i} className={`chatbot-msg chatbot-msg-${m.role}`}>
-                {m.text.split('\n').map((line, j) => (
-                  <div key={j}>{line}</div>
-                ))}
-                {loading && i === messages.length - 1 && m.role === 'bot' && (
-                  <span className="chatbot-cursor">▊</span>
-                )}
-              </div>
+      <div className="chatbot-messages">
+        {messages.map((m, i) => (
+          <div key={i} className={`chatbot-msg chatbot-msg-${m.role}`}>
+            {m.text.split('\n').map((line, j) => (
+              <div key={j}>{line}</div>
             ))}
-            <div ref={endRef} />
+            {loading && i === messages.length - 1 && m.role === 'bot' && (
+              <span className="chatbot-cursor">▊</span>
+            )}
           </div>
+        ))}
+        <div ref={endRef} />
+      </div>
 
-          <div className="chatbot-quick">
-            <button className="chatbot-q-btn" onClick={() => quickAsk('Give me a business overview')}>Overview</button>
-            <button className="chatbot-q-btn" onClick={() => quickAsk('How is my margin looking?')}>Margins</button>
-            <button className="chatbot-q-btn" onClick={() => quickAsk('What are my active projects?')}>Projects</button>
-            <button className="chatbot-q-btn" onClick={() => quickAsk('Summarize my finances')}>Finances</button>
-            <button className="chatbot-q-btn" onClick={() => quickAsk('Any overdue invoices?')}>Invoices</button>
-            <button className="chatbot-q-btn" onClick={() => quickAsk('Who owes me follow-ups?')}>Leads</button>
-          </div>
+      <div className="chatbot-quick">
+        <button className="chatbot-q-btn" onClick={() => quickAsk('Give me a business overview')}>Overview</button>
+        <button className="chatbot-q-btn" onClick={() => quickAsk('How is my margin looking?')}>Margins</button>
+        <button className="chatbot-q-btn" onClick={() => quickAsk('What are my active projects?')}>Projects</button>
+        <button className="chatbot-q-btn" onClick={() => quickAsk('Summarize my finances')}>Finances</button>
+        <button className="chatbot-q-btn" onClick={() => quickAsk('Any overdue invoices?')}>Invoices</button>
+        <button className="chatbot-q-btn" onClick={() => quickAsk('Who owes me follow-ups?')}>Leads</button>
+      </div>
 
-          <div className="chatbot-input">
-            <input
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && send()}
-              placeholder={puterReady ? 'Ask about your business...' : 'Waiting for AI connection...'}
-              disabled={!puterReady}
-            />
-            <button className="chatbot-send" onClick={send} disabled={!puterReady || loading}>
-              {loading ? '...' : 'Send'}
-            </button>
-          </div>
-        </div>
-      )}
+      <div className="chatbot-input">
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && send()}
+          placeholder={puterReady ? 'Ask about your business...' : 'Waiting for AI connection...'}
+          disabled={!puterReady}
+        />
+        <button className="chatbot-send" onClick={send} disabled={!puterReady || loading}>
+          {loading ? '...' : 'Send'}
+        </button>
+      </div>
     </div>
   )
 }
