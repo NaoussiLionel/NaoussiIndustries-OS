@@ -145,7 +145,7 @@ export default function PricingPackages() {
                 <td>{p.freelancer_cost} FCFA</td>
                 <td><span className={`status-badge ${p.target_margin_pct >= 70 ? 'status-active' : p.target_margin_pct >= 65 ? 'status-on_hold' : 'status-pending'}`}>{p.target_margin_pct}%</span></td>
                 <td>{p.description || '-'}</td>
-                <td style="font-size:12px;color:var(--text2);max-width:200px;white-space:normal">{p.use_case || '-'}</td>
+                <td style={{fontSize:12,color:'var(--text2)',maxWidth:200,whiteSpace:'normal'}}>{p.use_case || '-'}</td>
                 <td><button className="btn btn-sm btn-ghost" onClick={() => openEdit(p)}>Edit</button></td>
               </tr>
             ))}
