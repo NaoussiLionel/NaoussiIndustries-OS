@@ -29,10 +29,34 @@ const defaultData = {
   project_stages: [],
   invoices: [],
   pricing_packages: [
-    { id: 1, name: 'Starter Brand Kit', client_price: 80, freelancer_cost: 30, target_margin_pct: 60, description: 'Basic logo and brand identity starter', created_at: now(), updated_at: now() },
-    { id: 2, name: 'Business Identity Pack', client_price: 150, freelancer_cost: 60, target_margin_pct: 65, description: 'Full business identity suite', created_at: now(), updated_at: now() },
-    { id: 3, name: 'Growth Brand System', client_price: 300, freelancer_cost: 120, target_margin_pct: 70, description: 'Comprehensive brand system', created_at: now(), updated_at: now() },
-    { id: 4, name: 'Premium Strategy Pack', client_price: 700, freelancer_cost: 250, target_margin_pct: 75, description: 'Strategic brand development', created_at: now(), updated_at: now() },
+    {
+      id: 1, name: 'Starter Brand Kit', client_price: 80, freelancer_cost: 30, target_margin_pct: 60,
+      description: 'Logo design & brand identity starter pack. Includes 3 logo concepts, color palette, typography selection, and brand guidelines PDF. Delivered in 14 days.',
+      use_case: 'Ideal for startups, solopreneurs, and small businesses launching a new brand on a budget. Perfect if you need a professional visual identity quickly without the full strategic depth.',
+      client_advantage: 'You get a cohesive, professional brand identity that builds trust with your audience from day one. Ready-to-use logo files and brand rules save you months of guesswork.',
+      created_at: now(), updated_at: now()
+    },
+    {
+      id: 2, name: 'Business Identity Pack', client_price: 150, freelancer_cost: 60, target_margin_pct: 65,
+      description: 'Full business identity suite beyond the logo. Includes custom logo, full color system, typography scaling, stationery templates (business card, letterhead, email signature), social media kit, and complete brand guidelines.',
+      use_case: 'Designed for growing businesses that need a complete, consistent identity across all touchpoints. Ideal for companies that interact with clients through multiple channels.',
+      client_advantage: 'Your brand looks professional everywhere — from email to Instagram to printed materials. Consistency builds recognition and credibility, making every interaction a brand-building moment.',
+      created_at: now(), updated_at: now()
+    },
+    {
+      id: 3, name: 'Growth Brand System', client_price: 300, freelancer_cost: 120, target_margin_pct: 70,
+      description: 'Comprehensive brand system with strategy. Includes everything in the Business Identity Pack plus brand strategy workshop, competitor analysis, brand voice & tone guide, marketing template toolkit, and iconography system.',
+      use_case: 'For established businesses preparing to scale. Best suited for companies with a clear value proposition that need a brand system flexible enough to grow with them.',
+      client_advantage: 'You don\'t just get visuals — you get a strategic brand platform that differentiates you from competitors and scales effortlessly. Your brand speaks with one voice across every channel, saving marketing time and increasing impact.',
+      created_at: now(), updated_at: now()
+    },
+    {
+      id: 4, name: 'Premium Strategy Pack', client_price: 700, freelancer_cost: 250, target_margin_pct: 75,
+      description: 'Strategic brand development at the highest level. Includes deep market research, brand architecture, positioning strategy, full visual identity system, brand guidelines, campaign concept, and 3 months of brand advisory.',
+      use_case: 'For established enterprises, high-growth startups, or companies undergoing rebranding. Best for businesses that need a market-moving brand strategy backed by research and expert positioning.',
+      client_advantage: 'You own a premium, research-backed brand that commands higher prices and drives market share. The included advisory ensures your brand launches successfully and gains traction. This is not just a logo — it\'s a business asset that delivers ROI.',
+      created_at: now(), updated_at: now()
+    },
   ]
 }
 

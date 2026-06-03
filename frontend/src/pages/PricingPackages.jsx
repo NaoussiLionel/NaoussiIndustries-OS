@@ -8,7 +8,18 @@ function buildCatalogueHtml(packages) {
       <div class="pkg-name">${p.name}</div>
       <div class="pkg-price">${Number(p.client_price).toLocaleString()} <small>FCFA</small></div>
     </div>
-    <div class="pkg-desc">${p.description || 'Full brand identity package with strategic positioning, visual design, and delivery assets.'}</div>
+    <div class="pkg-section">
+      <div class="pkg-section-title">📦 What's Included</div>
+      <div class="pkg-desc">${p.description || 'Full brand identity package with strategic positioning, visual design, and delivery assets.'}</div>
+    </div>
+    <div class="pkg-section">
+      <div class="pkg-section-title">🎯 Best For</div>
+      <div class="pkg-desc">${p.use_case || 'Businesses looking for professional brand identity services.'}</div>
+    </div>
+    <div class="pkg-section">
+      <div class="pkg-section-title">✨ Why Choose This Pack</div>
+      <div class="pkg-desc" style="font-weight:500;color:#333;">${p.client_advantage || 'A professional brand identity that sets you apart and builds trust with your customers.'}</div>
+    </div>
   </div>`).join('')
 
   return `<!DOCTYPE html><html><head>
@@ -31,7 +42,11 @@ function buildCatalogueHtml(packages) {
       .pkg-name { font-size: 20px; font-weight: 700; color: #6c5ce7; margin: 0; }
       .pkg-price { font-size: 18px; font-weight: 700; }
       .pkg-price small { font-size: 11px; font-weight: 400; color: #888; }
-      .pkg-desc { font-size: 12px; color: #555; margin-bottom: 14px; line-height: 1.7; }
+      .pkg-section { margin-bottom: 16px; }
+      .pkg-section:last-child { margin-bottom: 0; }
+      .pkg-section-title { font-size: 11px; font-weight: 600; color: #6c5ce7; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+      .pkg-desc { font-size: 12px; color: #555; line-height: 1.7; }
+      .pkg-desc strong { color: #333; }
       .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 9px; color: #aaa; }
       .zone-table { width: 100%; border-collapse: collapse; margin-top: 40px; page-break-inside: avoid; }
       .zone-table th { background: #f5f5f5; padding: 8px 14px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; }
@@ -90,7 +105,7 @@ export default function PricingPackages() {
   function handleChange(e) { setForm({ ...form, [e.target.name]: e.target.value }) }
 
   async function handleSave() {
-    await api.packages.update(form.id, { ...form, client_price: Number(form.client_price), freelancer_cost: Number(form.freelancer_cost), target_margin_pct: Number(form.target_margin_pct) })
+    await api.packages.update(form.id, { ...form, client_price: Number(form.client_price), freelancer_cost: Number(form.freelancer_cost), target_margin_pct: Number(form.target_margin_pct), description: form.description, use_case: form.use_case, client_advantage: form.client_advantage })
     setModal(null); api.packages.list().then(setPackages)
   }
 
@@ -118,6 +133,7 @@ export default function PricingPackages() {
               <th>Freelancer Cost</th>
               <th>Target Margin</th>
               <th>Description</th>
+              <th>Use Case</th>
               <th></th>
             </tr>
           </thead>
@@ -129,6 +145,7 @@ export default function PricingPackages() {
                 <td>{p.freelancer_cost} FCFA</td>
                 <td><span className={`status-badge ${p.target_margin_pct >= 70 ? 'status-active' : p.target_margin_pct >= 65 ? 'status-on_hold' : 'status-pending'}`}>{p.target_margin_pct}%</span></td>
                 <td>{p.description || '-'}</td>
+                <td style="font-size:12px;color:var(--text2);max-width:200px;white-space:normal">{p.use_case || '-'}</td>
                 <td><button className="btn btn-sm btn-ghost" onClick={() => openEdit(p)}>Edit</button></td>
               </tr>
             ))}
@@ -158,7 +175,9 @@ export default function PricingPackages() {
             <FormGroup label="Freelancer Cost (FCFA)"><input type="number" name="freelancer_cost" value={form.freelancer_cost} onChange={handleChange} /></FormGroup>
           </div>
           <FormGroup label="Target Margin (%)"><input type="number" name="target_margin_pct" value={form.target_margin_pct} onChange={handleChange} /></FormGroup>
-          <FormGroup label="Description"><textarea name="description" value={form.description} onChange={handleChange} rows={3} /></FormGroup>
+          <FormGroup label="Description (what's included)"><textarea name="description" value={form.description} onChange={handleChange} rows={3} /></FormGroup>
+          <FormGroup label="Use Case (best for)"><textarea name="use_case" value={form.use_case} onChange={handleChange} rows={2} /></FormGroup>
+          <FormGroup label="Client Advantage (why choose this)"><textarea name="client_advantage" value={form.client_advantage} onChange={handleChange} rows={2} /></FormGroup>
           <div className="modal-actions">
             <button className="btn btn-ghost" onClick={() => setModal(null)}>Cancel</button>
             <button className="btn btn-primary" onClick={handleSave}>Save</button>
